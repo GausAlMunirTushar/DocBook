@@ -3,13 +3,18 @@ import '../assets/css/Form.css'
 import {Form, Input, message} from 'antd';
 import {Link, useNavigate} from 'react-router-dom'
 import axios from 'axios'
+import { useDispatch } from 'react-redux';
+import { showLoading, hideLoading } from '../redux/features/alertSlice';
 const Register = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
   // form handler
   const onFinishHandler = async (values) => {
+      const uri = 'https://dockbookbakcend.onrender.com'
      try {
-        const uri = 'https://dockbookbakcend.onrender.com'
+        dispatch(showLoading())
         const res = await axios.post(uri + '/users/register', values)
+        dispatch(hideLoading())
         if(res.data.success){
             message.success('Register Successfully')
             navigate('/login')
@@ -17,6 +22,7 @@ const Register = () => {
             message.error(res.data.message)
         }
      } catch (error) {
+        dispatch(hideLoading())
         console.log(error)
         message.error('Something Went Wrong')
      }
