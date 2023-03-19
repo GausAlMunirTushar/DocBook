@@ -1,12 +1,25 @@
 import React from 'react';
 import '../assets/css/Form.css'
-import {Form, Input} from 'antd';
-import {Link} from 'react-router-dom'
+import {Form, Input, message} from 'antd';
+import {Link, useNavigate} from 'react-router-dom'
+import axios from 'axios'
 const Register = () => {
-
+    const navigate = useNavigate()
   // form handler
-  const onFinishHandler = (values) => {
-      console.log(values)
+  const onFinishHandler = async (values) => {
+     try {
+        const uri = 'https://dockbookbakcend.onrender.com'
+        const res = await axios.post(uri + '/users/register', values)
+        if(res.data.success){
+            message.success('Register Successfully')
+            navigate('/login')
+        }else{
+            message.error(res.data.message)
+        }
+     } catch (error) {
+        console.log(error)
+        message.error('Something Went Wrong')
+     }
   }
   return (
     <>

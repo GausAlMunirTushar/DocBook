@@ -1,12 +1,28 @@
 import React from 'react'
 import '../assets/css/Form.css'
-import {Form, Input} from 'antd';
-import {Link} from 'react-router-dom'
+import {Form, Input, message} from 'antd';
+import {Link, useNavigate} from 'react-router-dom'
+import axios from 'axios'
 const Login = () => {
+  const navigate = useNavigate()
+
    // form handler
-   const onFinishHandler = (values) => {
-    console.log(values)
-}
+   const onFinishHandler = async (values) => {
+    const uri = 'https://dockbookbakcend.onrender.com'
+    try {
+      const res = await axios.post(uri + '/users/login', values);
+      if(res.data.success){
+        message.success('Login Successfully')
+        localStorage.setItem('token', res.data.token)
+        navigate('/')
+      }else{
+        message.error(res.data.message)
+      }
+    } catch (error) {
+      console.log(error)
+      message.error('Something Went Wrong')
+    }
+  }
   return (
     <>
           <div className="form-container">
